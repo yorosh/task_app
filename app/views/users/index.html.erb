@@ -1,0 +1,55 @@
+<h1>スケジュール一覧</h1>
+
+<% if flash.notice %>
+    <p class="notice"><%= flash.notice %></p>
+<% end %>
+
+<table>
+  <thead>
+    <th>id</th>
+    <th>タイトル</th>
+    <th>開始日</th>
+    <th>終了日</th>
+    <th>スケジュール更新日時</th>
+    <th>終日</th>
+    <th>確認</th>   
+    <th>編集</th> 
+    <th>削除</th> 
+  </thead>
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td><%= user.id %></td>
+        <td><%= user.title %></td>
+        <td><%= user.start_date.to_s(:datetime_jp) %></td>
+        <td><%= user.last_date.to_s(:datetime_jp) %></td>
+        <td><%= user.updated_at.to_s(:datetime_jp) %></td>
+        <% if user.all_day == true %>
+          <td> ○  </td>
+        <% else user.all_day == false %>
+          <td>　</td>
+        <% end %>
+        <td> 
+           <%= link_to "参照", user %>         
+        </td>        
+        <td>        
+        <%= link_to "編集", [:edit, user] %>
+        </td>            
+        <td>                
+          <%= link_to "削除", user, method: :delete, data: { confirm: "本当に削除しますか？" } %>          
+        </td>                
+      </tr>       
+    <% end %>
+  </tbody>
+</table>      
+
+<p><%= link_to "ユーザー新規登録", :new_user %></p>
+
+<div class="date">
+ <p>現在の日時 :<%= now = Time.current.to_s(:datetime_jp) %></p>
+ <p>今後の予定数 :<%= User.where('last_date >= ?', Date.today).where('start_date <= ?', Date.today).count%></p>
+</div>
+
+
+
+
